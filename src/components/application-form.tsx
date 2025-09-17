@@ -38,6 +38,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Skeleton } from "./ui/skeleton";
+import { Badge } from "./ui/badge";
 
 const TOTAL_STEPS = 5;
 const LOCAL_STORAGE_KEY = "thanima-application-submitted";
@@ -86,6 +87,7 @@ export function ApplicationForm() {
   });
 
   const primaryPreference = form.watch("primaryPreference");
+  const secondaryPreference = form.watch("secondaryPreference");
 
   const processForm = async (data: ApplicationData) => {
     setIsSubmitting(true);
@@ -356,6 +358,17 @@ export function ApplicationForm() {
             currentStep === 3 ? "block animate-in fade-in-50" : "hidden"
           )}
         >
+          <div className="space-y-2">
+            <FormLabel>You have selected:</FormLabel>
+            <div className="flex flex-wrap gap-2">
+              {primaryPreference && (
+                <Badge variant="secondary">1: {primaryPreference}</Badge>
+              )}
+              {secondaryPreference && (
+                <Badge variant="secondary">2: {secondaryPreference}</Badge>
+              )}
+            </div>
+          </div>
           <FormField
             control={form.control}
             name="departmentJustification"
