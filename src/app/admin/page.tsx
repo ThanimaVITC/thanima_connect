@@ -32,5 +32,9 @@ export default function AdminPage() {
     return <AdminDashboard onLogout={handleLogout} />;
   }
 
-  return <AdminLogin onLogin={handleLogin} />;
+  return (
+    <main className="flex min-h-dvh flex-col items-center justify-center bg-background p-4">
+      <AdminLogin onLogin={handleLogin} />
+    </main>
+  );
 }
