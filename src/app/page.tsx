@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Instagram, Linkedin, Mail, Newspaper } from "lucide-react";
 import Link from "next/link";
@@ -137,6 +138,9 @@ export default function Home() {
           <CarouselNext className="mr-12" />
         </Carousel>
       </section>
+      <footer className="py-8 text-center text-sm text-muted-foreground">
+        thanima 2025
+      </footer>
     </main>
   );
 }
