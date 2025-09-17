@@ -30,7 +30,7 @@ export default function ApplyPage() {
           </CardContent>
         </Card>
         <p className="mt-4 text-center text-xs text-muted-foreground">
-          developed by Thanima Technical Team
+          Developed by Thanima Team
         </p>
       </div>
     </main>

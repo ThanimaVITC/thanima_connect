@@ -485,7 +485,7 @@ export function ApplicationForm() {
                     className="font-code"
                   />
                 </FormControl>
-                <FormDescription className="font-code">
+                <FormDescription>
                   Link to your portfolio, GitHub, Behance, etc.
                 </FormDescription>
                 <FormMessage />
@@ -497,7 +497,7 @@ export function ApplicationForm() {
             name="resume"
             render={({ field: { onChange, value, ...rest } }) => (
               <FormItem>
-                <FormLabel>Upload Resume/CV (Optional)</FormLabel>
+                <FormLabel>Upload Supporting Materials</FormLabel>
                 <FormControl>
                   <Input
                     type="file"
@@ -511,7 +511,7 @@ export function ApplicationForm() {
                   />
                 </FormControl>
                 <FormDescription>
-                  Upload your resume or a document with your work. Max 5MB.
+                 Upload supporting material that highlights your skills or interest (max 10MB)
                 </FormDescription>
                 <FormMessage />
               </FormItem>
