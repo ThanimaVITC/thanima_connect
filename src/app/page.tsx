@@ -17,10 +17,11 @@ import {
 } from '@/components/ui/card';
 import { DEPARTMENT_DESCRIPTIONS } from '@/lib/constants';
 import Image from 'next/image';
+import { PlaceHolderImages } from "@/lib/placeholder-images";
 
 export default function Home() {
   return (
-    <main className="flex min-h-dvh flex-col items-center justify-center p-4">
+    <main className="flex min-h-dvh flex-col items-center p-4">
       <section className="flex flex-col items-center justify-center text-center py-16 md:py-24">
         <div className="mx-auto mb-8 flex h-20 w-20 items-center justify-center rounded-full bg-primary/10">
           <Newspaper className="h-10 w-10 text-primary" />
@@ -77,6 +78,29 @@ export default function Home() {
             Find where you fit in.
           </p>
         </div>
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {DEPARTMENT_DESCRIPTIONS.map((dept) => (
+            <Card key={dept.name} className="h-full">
+              <CardHeader>
+                <CardTitle>{dept.name}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">{dept.description}</p>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </section>
+
+      <section className="w-full max-w-6xl py-16 md:py-24">
+        <div className="mb-12 text-center">
+          <h2 className="font-headline text-4xl font-bold tracking-tight text-foreground">
+            Gallery
+          </h2>
+          <p className="mt-2 text-lg text-muted-foreground">
+            A glimpse into our world.
+          </p>
+        </div>
         <Carousel
           opts={{
             align: 'start',
@@ -85,29 +109,24 @@ export default function Home() {
           className="w-full"
         >
           <CarouselContent>
-            {DEPARTMENT_DESCRIPTIONS.map((dept, index) => (
+            {PlaceHolderImages.map((image, index) => (
               <CarouselItem
                 key={index}
                 className="md:basis-1/2 lg:basis-1/3"
               >
                 <div className="p-1">
-                  <Card className="h-full overflow-hidden">
-                    <div className="relative h-48 w-full">
-                       <Image
-                        src={`https://picsum.photos/seed/${index + 10}/600/400`}
-                        alt={`${dept.name} department`}
-                        fill
-                        className="object-cover"
-                        data-ai-hint={`${dept.name.toLowerCase()} team`}
-                      />
-                    </div>
-                    <CardHeader>
-                      <CardTitle>{dept.name}</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-muted-foreground">
-                        {dept.description}
-                      </p>
+                  <Card className="overflow-hidden">
+                    <CardContent className="p-0">
+                      <div className="relative h-64 w-full">
+                        <Image
+                          src={image.imageUrl}
+                          alt={image.description}
+                          fill
+                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                          className="object-cover"
+                          data-ai-hint={image.imageHint}
+                        />
+                      </div>
                     </CardContent>
                   </Card>
                 </div>
