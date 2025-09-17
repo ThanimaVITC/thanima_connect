@@ -104,6 +104,12 @@ export async function downloadAllFiles(): Promise<{
       if (submission.resumeFileId) {
         try {
           const fileId = new ObjectId(submission.resumeFileId);
+          const files = await bucket.find({ _id: fileId }).toArray();
+          if (files.length === 0) {
+            console.error(`File not found in GridFS for submission ${submission.regNo}`);
+            continue;
+          }
+          const fileInfo = files[0];
           const downloadStream = bucket.openDownloadStream(fileId);
           
           const chunks: Buffer[] = [];
@@ -111,9 +117,8 @@ export async function downloadAllFiles(): Promise<{
             chunks.push(chunk);
           }
           const buffer = Buffer.concat(chunks);
-
-          const filename = `${submission.name.replace(/\s+/g, '_')}_${submission.regNo}.pdf`;
-          zip.file(filename, buffer);
+          
+          zip.file(fileInfo.filename, buffer);
         } catch (fileError) {
           console.error(`Failed to process file for ${submission.regNo}:`, fileError);
         }

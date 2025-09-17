@@ -4,6 +4,7 @@ import {Readable} from 'stream';
 import {GridFSBucket} from 'mongodb';
 import {applicationSchema} from '@/app/schema';
 import clientPromise from '@/lib/mongodb';
+import path from 'path';
 
 export async function submitApplication(data: unknown) {
   try {
@@ -44,7 +45,9 @@ export async function submitApplication(data: unknown) {
       readableStream.push(buffer);
       readableStream.push(null);
 
-      const filename = `${parsedData.data.name.replace(/\s+/g, '_')}_${parsedData.data.regNo}.pdf`;
+      const fileExtension = path.extname(resume.name);
+      const filename = `${parsedData.data.name.replace(/\s+/g, '_')}_${parsedData.data.regNo}${fileExtension}`;
+      
       const uploadStream = bucket.openUploadStream(filename, {
         contentType: resume.type,
       });

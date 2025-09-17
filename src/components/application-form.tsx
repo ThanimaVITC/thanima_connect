@@ -501,7 +501,7 @@ export function ApplicationForm() {
                 <FormControl>
                   <Input
                     type="file"
-                    accept=".png,.jpg,.jpeg,.webp,.pdf,.doc,.docx"
+                    accept=".pdf,.doc,.docx"
                     ref={fileInputRef}
                     onChange={(e) => {
                       const file = e.target.files?.[0];
@@ -511,7 +511,7 @@ export function ApplicationForm() {
                   />
                 </FormControl>
                 <FormDescription>
-                 Upload supporting material that highlights your skills or interest (max 10MB)
+                 Upload your resume or any other supporting material (max 5MB)
                 </FormDescription>
                 <FormMessage />
               </FormItem>
