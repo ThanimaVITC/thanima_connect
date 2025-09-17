@@ -28,9 +28,13 @@ export const applicationSchema = z
     secondaryPreference: z.enum(DEPARTMENTS, {
       errorMap: () => ({ message: "Please select a secondary department." }),
     }),
-    essay1: z.string().optional(),
-    essay2: z.string().optional(),
+    departmentJustification: z
+      .string()
+      .min(1, "Please answer this question."),
+    skillsAndExperience: z.string().min(1, "Please answer this question."),
     portfolioLink: z.string().url("Invalid URL.").optional().or(z.literal("")),
+    bonusEssay1: z.string().optional(),
+    bonusEssay2: z.string().optional(),
   })
   .refine((data) => data.primaryPreference !== data.secondaryPreference, {
     message: "Primary and secondary preferences cannot be the same.",

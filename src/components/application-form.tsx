@@ -38,6 +38,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
+const TOTAL_STEPS = 5;
+
 export function ApplicationForm() {
   const [currentStep, setCurrentStep] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -54,9 +56,11 @@ export function ApplicationForm() {
       previousExperience: "",
       primaryPreference: undefined,
       secondaryPreference: undefined,
-      essay1: "",
-      essay2: "",
+      departmentJustification: "",
+      skillsAndExperience: "",
       portfolioLink: "",
+      bonusEssay1: "",
+      bonusEssay2: "",
     },
   });
 
@@ -67,7 +71,7 @@ export function ApplicationForm() {
     const result = await submitApplication(data);
 
     if (result.success) {
-      setCurrentStep(4);
+      setCurrentStep(TOTAL_STEPS);
     } else {
       toast({
         title: "Submission Failed",
@@ -79,20 +83,21 @@ export function ApplicationForm() {
   };
 
   const nextStep = async () => {
-    const fields: FieldPath<ApplicationData>[][] = [
+    const fieldsPerStep: FieldPath<ApplicationData>[][] = [
       ["name", "regNo", "branchAndYear", "email", "phone"],
       ["previousExperience"],
       ["primaryPreference", "secondaryPreference"],
-      ["essay1", "essay2", "portfolioLink"],
+      ["departmentJustification", "skillsAndExperience", "portfolioLink"],
+      ["bonusEssay1", "bonusEssay2"],
     ];
 
-    const output = await form.trigger(fields[currentStep], {
+    const output = await form.trigger(fieldsPerStep[currentStep], {
       shouldFocus: true,
     });
 
     if (!output) return;
 
-    if (currentStep < 3) {
+    if (currentStep < TOTAL_STEPS - 1) {
       setCurrentStep((prev) => prev + 1);
     } else {
       await form.handleSubmit(processForm)();
@@ -103,7 +108,7 @@ export function ApplicationForm() {
     setCurrentStep((prev) => prev - 1);
   };
 
-  if (currentStep === 4) {
+  if (currentStep === TOTAL_STEPS) {
     return (
       <div className="py-8 text-center animate-in fade-in-50 duration-500">
         <CheckCircle2 className="mx-auto h-16 w-16 text-primary" />
@@ -121,7 +126,10 @@ export function ApplicationForm() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(processForm)} className="space-y-8">
-        <Progress value={((currentStep + 1) / 4) * 100} className="mb-8" />
+        <Progress
+          value={((currentStep + 1) / TOTAL_STEPS) * 100}
+          className="mb-8"
+        />
         <div
           className={cn(
             "space-y-6",
@@ -313,16 +321,13 @@ export function ApplicationForm() {
         >
           <FormField
             control={form.control}
-            name="essay1"
+            name="departmentJustification"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>
-                  If you had to describe about one malayalam movie, what would
-                  it be and why? (Optional)
-                </FormLabel>
+                <FormLabel>Why have you chosen these departments?</FormLabel>
                 <FormControl>
                   <Textarea
-                    placeholder="Tell us about the movie..."
+                    placeholder="Tell us your reasons..."
                     className="min-h-[120px]"
                     {...field}
                   />
@@ -333,16 +338,16 @@ export function ApplicationForm() {
           />
           <FormField
             control={form.control}
-            name="essay2"
+            name="skillsAndExperience"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>
-                  What’s one unforgettable memory or cultural tradition from
-                  Kerala that inspires you? (Optional)
+                  What skills, prior experience, or qualities make you suitable
+                  for these departments?
                 </FormLabel>
                 <FormControl>
                   <Textarea
-                    placeholder="Describe the memory or tradition..."
+                    placeholder="Describe your skills and experience..."
                     className="min-h-[120px]"
                     {...field}
                   />
@@ -373,6 +378,54 @@ export function ApplicationForm() {
           />
         </div>
 
+        <div
+          className={cn(
+            "space-y-6",
+            currentStep === 4 ? "block animate-in fade-in-50" : "hidden"
+          )}
+        >
+          <FormField
+            control={form.control}
+            name="bonusEssay1"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>
+                  If you had to describe about one malayalam movie, what would
+                  it be and why? (Optional)
+                </FormLabel>
+                <FormControl>
+                  <Textarea
+                    placeholder="Tell us about the movie..."
+                    className="min-h-[120px]"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="bonusEssay2"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>
+                  What’s one unforgettable memory or cultural tradition from
+                  Kerala that inspires you? (Optional)
+                </FormLabel>
+                <FormControl>
+                  <Textarea
+                    placeholder="Describe the memory or tradition..."
+                    className="min-h-[120px]"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+
         <div className="flex justify-between pt-4">
           <Button
             type="button"
@@ -388,20 +441,20 @@ export function ApplicationForm() {
             type="button"
             onClick={nextStep}
             variant="default"
-            className={cn(currentStep === 3 && "hidden")}
             disabled={isSubmitting}
           >
-            Next
-            <ArrowRight />
-          </Button>
-          <Button
-            type="submit"
-            variant="default"
-            className={cn(currentStep !== 3 && "hidden")}
-            disabled={isSubmitting}
-          >
-            {isSubmitting && <Loader2 className="animate-spin" />}
-            Submit Application
+            {currentStep === TOTAL_STEPS - 1 ? (
+              isSubmitting ? (
+                <Loader2 className="animate-spin" />
+              ) : (
+                "Submit Application"
+              )
+            ) : (
+              <>
+                Next
+                <ArrowRight />
+              </>
+            )}
           </Button>
         </div>
       </form>
