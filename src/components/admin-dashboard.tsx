@@ -24,7 +24,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Skeleton } from './ui/skeleton';
-import { Download, FileCsv, LogOut } from 'lucide-react';
+import { Download, FileSpreadsheet, LogOut } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 export function AdminDashboard({ onLogout }: { onLogout: () => Promise<void> }) {
@@ -122,7 +122,7 @@ export function AdminDashboard({ onLogout }: { onLogout: () => Promise<void> }) 
                 onClick={handleExportCsv}
                 disabled={exportingCsv || loading}
               >
-                <FileCsv />
+                <FileSpreadsheet />
                 {exportingCsv ? 'Exporting...' : 'Export CSV'}
               </Button>
               <Button
