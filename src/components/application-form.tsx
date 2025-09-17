@@ -61,6 +61,7 @@ export function ApplicationForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [hasApplied, setHasApplied] = useState<boolean | null>(null);
   const { toast } = useToast();
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const submitted = localStorage.getItem(LOCAL_STORAGE_KEY);
@@ -93,7 +94,19 @@ export function ApplicationForm() {
 
   const processForm = async (data: ApplicationData) => {
     setIsSubmitting(true);
-    const result = await submitApplication(data);
+    
+    const formData = new FormData();
+    Object.entries(data).forEach(([key, value]) => {
+      if (value !== undefined && value !== null && value !== '') {
+        if (key === 'resume' && value instanceof File) {
+          formData.append(key, value);
+        } else if (key !== 'resume') {
+          formData.append(key, value as string);
+        }
+      }
+    });
+
+    const result = await submitApplication(formData);
 
     if (result.success) {
       localStorage.setItem(LOCAL_STORAGE_KEY, "true");
@@ -171,7 +184,7 @@ export function ApplicationForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(processForm)} className="space-y-8">
+      <form onSubmit={(e) => { e.preventDefault(); nextStep(); }} className="space-y-8">
         <Progress
           value={((currentStep + 1) / TOTAL_STEPS) * 100}
           className="mb-8"
@@ -436,19 +449,19 @@ export function ApplicationForm() {
           <FormField
             control={form.control}
             name="resume"
-            render={({ field: { onChange, ...props } }) => (
+            render={({ field: { onChange, value, ...rest } }) => (
               <FormItem>
                 <FormLabel>Upload Resume/CV (Optional)</FormLabel>
                 <FormControl>
                   <Input
                     type="file"
                     accept=".pdf,.doc,.docx"
+                    ref={fileInputRef}
                     onChange={(e) => {
                       const file = e.target.files?.[0];
                       onChange(file);
                     }}
-                    {...props}
-                    value={undefined}
+                    {...rest}
                   />
                 </FormControl>
                 <FormDescription>
@@ -520,8 +533,7 @@ export function ApplicationForm() {
             Back
           </Button>
           <Button
-            type="button"
-            onClick={nextStep}
+            type="submit"
             variant="default"
             disabled={isSubmitting}
           >
@@ -543,5 +555,3 @@ export function ApplicationForm() {
     </Form>
   );
 }
-
-    

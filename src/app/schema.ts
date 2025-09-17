@@ -8,6 +8,12 @@ const ACCEPTED_FILE_TYPES = [
   "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
 ];
 
+const fileSchema =
+  typeof window === 'undefined'
+    ? z.any()
+    : z.instanceof(File, { message: 'Resume is required.' });
+
+
 export const applicationSchema = z
   .object({
     name: z.string().min(2, "Name must be at least 2 characters."),
@@ -40,16 +46,15 @@ export const applicationSchema = z
       .min(1, "Please answer this question."),
     skillsAndExperience: z.string().min(1, "Please answer this question."),
     portfolioLink: z.string().url("Invalid URL.").optional().or(z.literal("")),
-    resume: z
-      .any()
+    resume: fileSchema
+      .optional()
       .refine((file) => !file || file.size <= MAX_FILE_SIZE, {
         message: `Max file size is 5MB.`,
       })
       .refine(
         (file) => !file || ACCEPTED_FILE_TYPES.includes(file.type),
         "Only .pdf, .doc, and .docx formats are supported."
-      )
-      .optional(),
+      ),
     bonusEssay1: z.string().optional(),
     bonusEssay2: z.string().optional(),
   })

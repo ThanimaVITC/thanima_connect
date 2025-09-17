@@ -5,7 +5,19 @@ import clientPromise from "@/lib/mongodb";
 
 export async function submitApplication(data: unknown) {
   try {
-    const parsedData = applicationSchema.safeParse(data);
+    // The incoming data is FormData, so we need to extract the fields
+    const formData = data as FormData;
+    const rawData = Object.fromEntries(formData.entries());
+
+    // The resume is a File object, keep it as is for validation
+    const resumeFile = formData.get('resume');
+    
+    const dataToValidate = {
+      ...rawData,
+      resume: resumeFile instanceof File && resumeFile.size > 0 ? resumeFile : undefined,
+    };
+
+    const parsedData = applicationSchema.safeParse(dataToValidate);
 
     if (!parsedData.success) {
       console.error("Validation Error:", parsedData.error.flatten());
