@@ -6,7 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import {Feather} from 'lucide-react';
+import {Newspaper} from 'lucide-react';
 
 export default function ApplyPage() {
   return (
@@ -15,7 +15,7 @@ export default function ApplyPage() {
         <Card className="border-2 border-primary/20 shadow-lg dark:shadow-primary/10">
           <CardHeader className="text-center">
             <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
-              <Feather className="h-8 w-8 text-primary" />
+              <Newspaper className="h-8 w-8 text-primary" />
             </div>
             <CardTitle className="font-headline text-3xl tracking-tight">
               Thanima Recruitment Portal

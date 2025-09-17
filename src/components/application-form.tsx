@@ -295,7 +295,6 @@ export function ApplicationForm() {
             onClick={nextStep}
             variant="default"
             className={cn(currentStep !== 0 && "hidden")}
-            style={{ backgroundColor: "hsl(var(--accent))", color: "hsl(var(--accent-foreground))"}}
           >
             Next
             <ArrowRight />
@@ -305,7 +304,6 @@ export function ApplicationForm() {
             variant="default"
             className={cn(currentStep !== 1 && "hidden")}
             disabled={isSubmitting}
-            style={{ backgroundColor: "hsl(var(--accent))", color: "hsl(var(--accent-foreground))"}}
           >
             {isSubmitting && <Loader2 className="animate-spin" />}
             Submit Application
