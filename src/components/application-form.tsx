@@ -4,7 +4,16 @@ import * as React from "react";
 import { useState, useEffect } from "react";
 import { useForm, type FieldPath } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowLeft, ArrowRight, CheckCircle2, Loader2 } from "lucide-react";
+import {
+  ArrowLeft,
+  ArrowRight,
+  CheckCircle2,
+  Home,
+  Instagram,
+  Linkedin,
+  Loader2,
+  Mail,
+} from "lucide-react";
 
 import { applicationSchema, type ApplicationData } from "@/app/schema";
 import { submitApplication } from "@/app/actions";
@@ -40,6 +49,7 @@ import {
 } from "@/components/ui/card";
 import { Skeleton } from "./ui/skeleton";
 import { Badge } from "./ui/badge";
+import Link from "next/link";
 
 const TOTAL_STEPS = 5;
 const LOCAL_STORAGE_KEY = "thanima-application-submitted";
@@ -179,6 +189,39 @@ export function ApplicationForm() {
           Thank you for your interest in joining Thanima. We have received your
           application and will be in touch shortly.
         </p>
+        <div className="mt-8 flex flex-col items-center gap-4">
+          <Button asChild>
+            <Link href="/">
+              <Home />
+              Go to Homepage
+            </Link>
+          </Button>
+          <div className="flex items-center gap-4">
+            <Button asChild variant="ghost" size="icon">
+              <Link
+                href="https://www.instagram.com"
+                target="_blank"
+                aria-label="Instagram"
+              >
+                <Instagram />
+              </Link>
+            </Button>
+            <Button asChild variant="ghost" size="icon">
+              <Link
+                href="https://www.linkedin.com"
+                target="_blank"
+                aria-label="LinkedIn"
+              >
+                <Linkedin />
+              </Link>
+            </Button>
+            <Button asChild variant="ghost" size="icon">
+              <Link href="mailto:example@example.com" aria-label="Email">
+                <Mail />
+              </Link>
+            </Button>
+          </div>
+        </div>
       </div>
     );
   }
