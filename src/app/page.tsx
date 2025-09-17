@@ -24,9 +24,11 @@ export default function Home() {
   return (
     <main className="flex min-h-dvh flex-col items-center p-4">
       <section className="flex flex-col items-center justify-center text-center py-16 md:py-24">
-        <div className="mx-auto mb-8 flex h-20 w-20 items-center justify-center rounded-full bg-primary/10">
-          <Newspaper className="h-10 w-10 text-primary" />
-        </div>
+      <div className="mx-auto mb-8 flex h-20 w-20 items-center justify-center rounded-full bg-primary/10">
+         <img src="/images/logo.webp" alt="Logo"  className="h-20 w-20 rounded-full object-cover" />
+      </div>
+
+
         <h1 className="font-headline text-5xl font-bold tracking-tight text-foreground md:text-6xl">
           Thanima Recruitment Hub
         </h1>
