@@ -76,8 +76,8 @@ export function ApplicationForm() {
       email: "",
       phone: "",
       previousExperience: "",
-      primaryPreference: undefined,
-      secondaryPreference: undefined,
+      primaryPreference: "" as any,
+      secondaryPreference: "" as any,
       departmentJustification: "",
       skillsAndExperience: "",
       portfolioLink: "",
@@ -448,6 +448,7 @@ export function ApplicationForm() {
                       onChange(file);
                     }}
                     {...props}
+                    value={undefined}
                   />
                 </FormControl>
                 <FormDescription>
@@ -542,3 +543,5 @@ export function ApplicationForm() {
     </Form>
   );
 }
+
+    
