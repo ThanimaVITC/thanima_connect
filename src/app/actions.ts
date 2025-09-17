@@ -15,12 +15,15 @@ export async function submitApplication(data: unknown) {
     const client = await clientPromise;
     const db = client.db(process.env.DATABASE_NAME);
     const collection = db.collection("submissions");
-    await collection.insertOne(parsedData.data);
+    const result = await collection.insertOne(parsedData.data);
 
+    if (!result.insertedId) {
+      return { success: false, error: "Failed to save the application." };
+    }
 
     console.log("New application received and saved:", parsedData.data);
 
-    return { success: true, data: parsedData.data };
+    return { success: true };
   } catch (error) {
     console.error("Error submitting application:", error);
     return { success: false, error: "An unexpected error occurred." };
