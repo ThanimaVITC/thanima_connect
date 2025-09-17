@@ -1,54 +1,123 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Instagram, Linkedin, Mail, Newspaper } from "lucide-react";
 import Link from "next/link";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from '@/components/ui/carousel';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { DEPARTMENT_DESCRIPTIONS } from '@/lib/constants';
+import Image from 'next/image';
 
 export default function Home() {
   return (
-    <main className="flex min-h-dvh flex-col items-center justify-center text-center p-4">
-      <div className="mx-auto mb-8 flex h-20 w-20 items-center justify-center rounded-full bg-primary/10">
-        <Newspaper className="h-10 w-10 text-primary" />
-      </div>
-      <h1 className="font-headline text-5xl font-bold tracking-tight text-foreground md:text-6xl">
-        Thanima Recruitment Hub
-      </h1>
-      <p className="mt-4 max-w-2xl text-lg text-muted-foreground md:text-xl">
-        Join the heart of our cultural and literary community. We are looking for
-        passionate and dedicated students to join our various departments and
-        make a difference.
-      </p>
-      <div className="mt-8 flex flex-col items-center gap-4">
-        <Button asChild size="lg">
-          <Link href="/apply">
-            Get Started
-            <ArrowRight />
-          </Link>
-        </Button>
-        <div className="flex items-center gap-4 pt-4">
-          <Button asChild variant="ghost" size="icon">
-            <Link
-              href="https://www.instagram.com"
-              target="_blank"
-              aria-label="Instagram"
-            >
-              <Instagram />
-            </Link>
-          </Button>
-          <Button asChild variant="ghost" size="icon">
-            <Link
-              href="https://www.linkedin.com"
-              target="_blank"
-              aria-label="LinkedIn"
-            >
-              <Linkedin />
-            </Link>
-          </Button>
-          <Button asChild variant="ghost" size="icon">
-            <Link href="mailto:example@example.com" aria-label="Email">
-              <Mail />
-            </Link>
-          </Button>
+    <main className="flex min-h-dvh flex-col items-center justify-center p-4">
+      <section className="flex flex-col items-center justify-center text-center py-16 md:py-24">
+        <div className="mx-auto mb-8 flex h-20 w-20 items-center justify-center rounded-full bg-primary/10">
+          <Newspaper className="h-10 w-10 text-primary" />
         </div>
-      </div>
+        <h1 className="font-headline text-5xl font-bold tracking-tight text-foreground md:text-6xl">
+          Thanima Recruitment Hub
+        </h1>
+        <p className="mt-4 max-w-2xl text-lg text-muted-foreground md:text-xl">
+          Join the heart of our cultural and literary community. We are looking
+          for passionate and dedicated students to join our various departments
+          and make a difference.
+        </p>
+        <div className="mt-8 flex flex-col items-center gap-4">
+          <Button asChild size="lg">
+            <Link href="/apply">
+              Get Started
+              <ArrowRight />
+            </Link>
+          </Button>
+          <div className="flex items-center gap-4 pt-4">
+            <Button asChild variant="ghost" size="icon">
+              <Link
+                href="https://www.instagram.com"
+                target="_blank"
+                aria-label="Instagram"
+              >
+                <Instagram />
+              </Link>
+            </Button>
+            <Button asChild variant="ghost" size="icon">
+              <Link
+                href="https://www.linkedin.com"
+                target="_blank"
+                aria-label="LinkedIn"
+              >
+                <Linkedin />
+              </Link>
+            </Button>
+            <Button asChild variant="ghost" size="icon">
+              <Link href="mailto:example@example.com" aria-label="Email">
+                <Mail />
+              </Link>
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      <section className="w-full max-w-6xl py-16 md:py-24">
+        <div className="mb-12 text-center">
+          <h2 className="font-headline text-4xl font-bold tracking-tight text-foreground">
+            Our Departments
+          </h2>
+          <p className="mt-2 text-lg text-muted-foreground">
+            Find where you fit in.
+          </p>
+        </div>
+        <Carousel
+          opts={{
+            align: 'start',
+            loop: true,
+          }}
+          className="w-full"
+        >
+          <CarouselContent>
+            {DEPARTMENT_DESCRIPTIONS.map((dept, index) => (
+              <CarouselItem
+                key={index}
+                className="md:basis-1/2 lg:basis-1/3"
+              >
+                <div className="p-1">
+                  <Card className="h-full overflow-hidden">
+                    <div className="relative h-48 w-full">
+                       <Image
+                        src={`https://picsum.photos/seed/${index + 10}/600/400`}
+                        alt={`${dept.name} department`}
+                        fill
+                        className="object-cover"
+                        data-ai-hint={`${dept.name.toLowerCase()} team`}
+                      />
+                    </div>
+                    <CardHeader>
+                      <CardTitle>{dept.name}</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-muted-foreground">
+                        {dept.description}
+                      </p>
+                    </CardContent>
+                  </Card>
+                </div>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          <CarouselPrevious className="ml-12" />
+          <CarouselNext className="mr-12" />
+        </Carousel>
+      </section>
     </main>
   );
 }
