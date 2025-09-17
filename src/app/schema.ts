@@ -1,0 +1,30 @@
+import { z } from "zod";
+import { DEPARTMENTS } from "@/lib/constants";
+
+export const applicationSchema = z
+  .object({
+    name: z.string().min(2, "Name must be at least 2 characters."),
+    email: z.string().email("Invalid email address."),
+    phone: z
+      .string()
+      .min(10, "Phone number must be at least 10 digits.")
+      .regex(
+        /^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$/,
+        "Invalid phone number format."
+      ),
+    primaryPreference: z.enum(DEPARTMENTS, {
+      errorMap: () => ({ message: "Please select a primary department." }),
+    }),
+    secondaryPreference: z.enum(DEPARTMENTS, {
+      errorMap: () => ({ message: "Please select a secondary department." }),
+    }),
+    essay1: z.string().min(100, "Answer must be at least 100 characters."),
+    essay2: z.string().min(100, "Answer must be at least 100 characters."),
+    portfolioLink: z.string().url("Invalid URL.").optional().or(z.literal("")),
+  })
+  .refine((data) => data.primaryPreference !== data.secondaryPreference, {
+    message: "Primary and secondary preferences cannot be the same.",
+    path: ["secondaryPreference"],
+  });
+
+export type ApplicationData = z.infer<typeof applicationSchema>;
