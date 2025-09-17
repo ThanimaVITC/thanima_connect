@@ -201,7 +201,7 @@ export function ApplicationForm() {
           <div className="flex items-center gap-4">
             <Button asChild variant="ghost" size="icon">
               <Link
-                href="https://www.instagram.com"
+                href="https://www.instagram.com/thanimavitc/"
                 target="_blank"
                 aria-label="Instagram"
               >
@@ -210,7 +210,7 @@ export function ApplicationForm() {
             </Button>
             <Button asChild variant="ghost" size="icon">
               <Link
-                href="https://www.linkedin.com"
+                href="https://www.linkedin.com/company/thanima-literary-club/"
                 target="_blank"
                 aria-label="LinkedIn"
               >
@@ -218,7 +218,7 @@ export function ApplicationForm() {
               </Link>
             </Button>
             <Button asChild variant="ghost" size="icon">
-              <Link href="mailto:example@example.com" aria-label="Email">
+              <Link href="mailto:thanimamalayalamliteraryclub@gmail.com" aria-label="Email">
                 <Mail />
               </Link>
             </Button>
@@ -501,7 +501,7 @@ export function ApplicationForm() {
                 <FormControl>
                   <Input
                     type="file"
-                    accept=".pdf,.doc,.docx"
+                    accept=".png,.jpg,.jpeg,.webp,.pdf,.doc,.docx"
                     ref={fileInputRef}
                     onChange={(e) => {
                       const file = e.target.files?.[0];

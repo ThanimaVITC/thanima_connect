@@ -45,7 +45,7 @@ export default function Home() {
           <div className="flex items-center gap-4 pt-4">
             <Button asChild variant="ghost" size="icon">
               <Link
-                href="https://www.instagram.com"
+                href="https://www.instagram.com/thanimavitc/"
                 target="_blank"
                 aria-label="Instagram"
               >
@@ -54,7 +54,7 @@ export default function Home() {
             </Button>
             <Button asChild variant="ghost" size="icon">
               <Link
-                href="https://www.linkedin.com"
+                href="https://www.linkedin.com/company/thanima-literary-club/"
                 target="_blank"
                 aria-label="LinkedIn"
               >
@@ -62,7 +62,7 @@ export default function Home() {
               </Link>
             </Button>
             <Button asChild variant="ghost" size="icon">
-              <Link href="mailto:example@example.com" aria-label="Email">
+              <Link href="mailto:thanimamalayalamliteraryclub@gmail.com" aria-label="Email">
                 <Mail />
               </Link>
             </Button>
