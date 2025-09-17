@@ -181,7 +181,9 @@ export function ApplicationForm() {
   if (currentStep === TOTAL_STEPS) {
     return (
       <div className="py-8 text-center animate-in fade-in-50 duration-500">
-        <CheckCircle2 className="mx-auto h-16 w-16 text-primary" />
+        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
+          <CheckCircle2 className="h-10 w-10 text-primary animate-in zoom-in-50" />
+        </div>
         <h2 className="mt-4 font-headline text-2xl font-bold">
           Application Submitted!
         </h2>
