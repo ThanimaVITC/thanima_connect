@@ -12,16 +12,25 @@ export async function submitApplication(data: unknown) {
       return { success: false, error: "Invalid data provided." };
     }
     
+    // The resume is now available in `parsedData.data.resume`.
+    // In a real application, you would upload it to a file storage service
+    // like Firebase Storage here and save the URL to the database.
+    // For now, we will just exclude it from the database object.
+    const { resume, ...dbData } = parsedData.data;
+    
     const client = await clientPromise;
     const db = client.db(process.env.DATABASE_NAME);
     const collection = db.collection("submissions");
-    const result = await collection.insertOne(parsedData.data);
+    const result = await collection.insertOne(dbData);
 
     if (!result.insertedId) {
       return { success: false, error: "Failed to save the application." };
     }
 
-    console.log("New application received and saved:", parsedData.data);
+    console.log("New application received and saved:", dbData);
+    if (resume) {
+      console.log(`Resume received: ${resume.name}, size: ${resume.size} bytes`);
+    }
 
     return { success: true };
   } catch (error) {

@@ -81,9 +81,11 @@ export function ApplicationForm() {
       departmentJustification: "",
       skillsAndExperience: "",
       portfolioLink: "",
+      resume: undefined,
       bonusEssay1: "",
       bonusEssay2: "",
     },
+    mode: "onTouched",
   });
 
   const primaryPreference = form.watch("primaryPreference");
@@ -99,7 +101,7 @@ export function ApplicationForm() {
     } else {
       toast({
         title: "Submission Failed",
-        description: "An error occurred. Please try again.",
+        description: result.error || "An error occurred. Please try again.",
         variant: "destructive",
       });
     }
@@ -434,18 +436,22 @@ export function ApplicationForm() {
           <FormField
             control={form.control}
             name="resume"
-            render={({ field }) => (
+            render={({ field: { onChange, ...props } }) => (
               <FormItem>
                 <FormLabel>Upload Resume/CV (Optional)</FormLabel>
                 <FormControl>
                   <Input
                     type="file"
                     accept=".pdf,.doc,.docx"
-                    onChange={(e) => field.onChange(e.target.files?.[0])}
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      onChange(file);
+                    }}
+                    {...props}
                   />
                 </FormControl>
                 <FormDescription>
-                  Upload your resume or a document with your work.
+                  Upload your resume or a document with your work. Max 5MB.
                 </FormDescription>
                 <FormMessage />
               </FormItem>
