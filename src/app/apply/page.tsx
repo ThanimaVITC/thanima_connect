@@ -15,9 +15,9 @@ export default function ApplyPage() {
         <div className="content-backdrop">
           <Card className="border-0 shadow-none bg-transparent">
             <CardHeader className="text-center">
-              <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-primary/10">
-                <Newspaper className="h-10 w-10 text-primary" />
-              </div>
+            <div className="mx-auto mb-6 flex h-24 w-24 items-center justify-center">
+              <img src="/logo 2.png" alt="Thanima Logo" className="h-full w-full object-contain" />
+            </div>
               <CardTitle className="font-headline text-3xl sm:text-4xl tracking-tight text-overlay hero-title">
                 Thanima Recruitment Portal
               </CardTitle>

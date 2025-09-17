@@ -92,7 +92,6 @@ export function ApplicationForm() {
       secondaryPreference: "" as any,
       departmentJustification: "",
       skillsAndExperience: "",
-      portfolioLink: "",
       resume: undefined,
       bonusEssay1: "",
       bonusEssay2: "",
@@ -140,7 +139,6 @@ export function ApplicationForm() {
       [
         "departmentJustification",
         "skillsAndExperience",
-        "portfolioLink",
         "resume",
       ],
       ["bonusEssay1", "bonusEssay2"],
@@ -474,34 +472,14 @@ export function ApplicationForm() {
           />
           <FormField
             control={form.control}
-            name="portfolioLink"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Portfolio/Work Samples Link (Optional)</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="https://your-portfolio.com"
-                    {...field}
-                    className="font-code"
-                  />
-                </FormControl>
-                <FormDescription>
-                  Link to your portfolio, GitHub, Behance, etc.
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
             name="resume"
             render={({ field: { onChange, value, ...rest } }) => (
               <FormItem>
-                <FormLabel>Upload Supporting Materials</FormLabel>
+                <FormLabel>Upload a file (optional)</FormLabel>
                 <FormControl>
                   <Input
                     type="file"
-                    accept=".pdf,.doc,.docx"
+                    accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.mp4,.mov,.avi"
                     ref={fileInputRef}
                     onChange={(e) => {
                       const file = e.target.files?.[0];
@@ -511,7 +489,13 @@ export function ApplicationForm() {
                   />
                 </FormControl>
                 <FormDescription>
-                 Upload your resume or any other supporting material (max 5MB)
+                  File Upload (Limit to: Docs, PDFs, Images, Videos. Max size: 10 MB)
+                  <br />
+                  You may share any supporting material that highlights your skills or interest, such as:
+                  <br />• poem/story/artwork/poster you made
+                  <br />• An event you helped organize
+                  <br />• A photo/video that represents you
+                  <br />• Even a fun meme you created!
                 </FormDescription>
                 <FormMessage />
               </FormItem>
