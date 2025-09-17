@@ -4,38 +4,32 @@
     {
       "id": "gallery-1",
       "description": "Team members collaborating",
-      "imageUrl": "https://picsum.photos/seed/101/600/400",
+      "imageUrl": "/1.webp",
       "imageHint": "team collaboration"
     },
     {
       "id": "gallery-2",
       "description": "Cultural event performance",
-      "imageUrl": "https://picsum.photos/seed/102/600/400",
+      "imageUrl": "/2.webp",
       "imageHint": "cultural performance"
     },
     {
       "id": "gallery-3",
       "description": "Audience at an event",
-      "imageUrl": "https://picsum.photos/seed/103/600/400",
+      "imageUrl": "/3.webp",
       "imageHint": "event audience"
     },
     {
       "id": "gallery-4",
       "description": "Literary discussion session",
-      "imageUrl": "https://picsum.photos/seed/104/600/400",
+      "imageUrl": "/4.webp",
       "imageHint": "literary discussion"
     },
     {
       "id": "gallery-5",
       "description": "Behind the scenes of an event",
-      "imageUrl": "https://picsum.photos/seed/105/600/400",
+      "imageUrl": "/5.webp",
       "imageHint": "event production"
-    },
-    {
-      "id": "gallery-6",
-      "description": "Creative design workshop",
-      "imageUrl": "https://picsum.photos/seed/106/600/400",
-      "imageHint": "design workshop"
     }
   ]
 }
