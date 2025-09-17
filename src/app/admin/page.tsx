@@ -33,8 +33,10 @@ export default function AdminPage() {
   }
 
   return (
-    <main className="flex min-h-dvh flex-col items-center justify-center bg-background p-4">
-      <AdminLogin onLogin={handleLogin} />
+    <main className="flex min-h-dvh flex-col items-center justify-center p-4">
+      <div className="content-backdrop">
+        <AdminLogin onLogin={handleLogin} />
+      </div>
     </main>
   );
 }
