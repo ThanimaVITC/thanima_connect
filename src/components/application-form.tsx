@@ -41,8 +41,11 @@ export function ApplicationForm() {
     resolver: zodResolver(applicationSchema),
     defaultValues: {
       name: "",
+      regNo: "",
+      branchAndYear: "",
       email: "",
       phone: "",
+      previousExperience: "",
       primaryPreference: undefined,
       secondaryPreference: undefined,
       essay1: "",
@@ -56,7 +59,7 @@ export function ApplicationForm() {
     const result = await submitApplication(data);
 
     if (result.success) {
-      setCurrentStep(2);
+      setCurrentStep(3); // Updated to 3 for the success step
     } else {
       toast({
         title: "Submission Failed",
@@ -69,7 +72,8 @@ export function ApplicationForm() {
 
   const nextStep = async () => {
     const fields: FieldPath<ApplicationData>[][] = [
-      ["name", "email", "phone"],
+      ["name", "regNo", "branchAndYear", "email", "phone"],
+      ["previousExperience"],
       [
         "primaryPreference",
         "secondaryPreference",
@@ -78,20 +82,26 @@ export function ApplicationForm() {
         "portfolioLink",
       ],
     ];
+
     const output = await form.trigger(fields[currentStep], {
       shouldFocus: true,
     });
 
     if (!output) return;
 
-    setCurrentStep((prev) => prev + 1);
+    if (currentStep < 2) {
+      setCurrentStep((prev) => prev + 1);
+    } else {
+      // This is the final step before submission, so we should submit
+      await form.handleSubmit(processForm)();
+    }
   };
 
   const prevStep = () => {
     setCurrentStep((prev) => prev - 1);
   };
 
-  if (currentStep === 2) {
+  if (currentStep === 3) {
     return (
       <div className="py-8 text-center animate-in fade-in-50 duration-500">
         <CheckCircle2 className="mx-auto h-16 w-16 text-primary" />
@@ -109,7 +119,10 @@ export function ApplicationForm() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(processForm)} className="space-y-8">
-        <Progress value={currentStep === 0 ? 50 : 100} className="mb-8" />
+        <Progress
+          value={((currentStep + 1) / 3) * 100}
+          className="mb-8"
+        />
         <div
           className={cn(
             "space-y-6",
@@ -124,6 +137,32 @@ export function ApplicationForm() {
                 <FormLabel>Full Name</FormLabel>
                 <FormControl>
                   <Input placeholder="Your full name" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="regNo"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Registration Number</FormLabel>
+                <FormControl>
+                  <Input placeholder="e.g. 24BYB1234" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="branchAndYear"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Branch and Year of Study</FormLabel>
+                <FormControl>
+                  <Input placeholder="e.g. CSE, 2nd Year" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -147,7 +186,7 @@ export function ApplicationForm() {
             name="phone"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Phone Number</FormLabel>
+                <FormLabel>WhatsApp Number</FormLabel>
                 <FormControl>
                   <Input placeholder="Your phone number" {...field} />
                 </FormControl>
@@ -161,6 +200,34 @@ export function ApplicationForm() {
           className={cn(
             "space-y-6",
             currentStep === 1 ? "block animate-in fade-in-50" : "hidden"
+          )}
+        >
+          <FormField
+            control={form.control}
+            name="previousExperience"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>
+                  Have you previously been part of Thanima or any other
+                  cultural/literary club? If yes, please specify your role.
+                </FormLabel>
+                <FormControl>
+                  <Textarea
+                    placeholder="Your previous experience (if any)..."
+                    className="min-h-[120px]"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+
+        <div
+          className={cn(
+            "space-y-6",
+            currentStep === 2 ? "block animate-in fade-in-50" : "hidden"
           )}
         >
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
@@ -198,7 +265,7 @@ export function ApplicationForm() {
                 <FormItem>
                   <FormLabel>Secondary Department</FormLabel>
                   <Select
-                    onValueChange={field.onChange}
+                    onValuecha_nge={field.onChange}
                     defaultValue={field.value}
                   >
                     <FormControl>
@@ -260,7 +327,7 @@ export function ApplicationForm() {
             name="portfolioLink"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="font-code">
+                <FormLabel>
                   Portfolio/Work Samples Link (Optional)
                 </FormLabel>
                 <FormControl>
@@ -294,7 +361,8 @@ export function ApplicationForm() {
             type="button"
             onClick={nextStep}
             variant="default"
-            className={cn(currentStep !== 0 && "hidden")}
+            className={cn(currentStep === 2 && "hidden")}
+            disabled={isSubmitting}
           >
             Next
             <ArrowRight />
@@ -302,7 +370,7 @@ export function ApplicationForm() {
           <Button
             type="submit"
             variant="default"
-            className={cn(currentStep !== 1 && "hidden")}
+            className={cn(currentStep !== 2 && "hidden")}
             disabled={isSubmitting}
           >
             {isSubmitting && <Loader2 className="animate-spin" />}
