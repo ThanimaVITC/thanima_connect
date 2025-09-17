@@ -1,10 +1,10 @@
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Newspaper } from "lucide-react";
+import { ArrowRight, Instagram, Linkedin, Mail, Newspaper } from "lucide-react";
 import Link from "next/link";
 
 export default function Home() {
   return (
-    <main className="flex min-h-dvh flex-col items-center justify-center text-center">
+    <main className="flex min-h-dvh flex-col items-center justify-center text-center p-4">
       <div className="mx-auto mb-8 flex h-20 w-20 items-center justify-center rounded-full bg-primary/10">
         <Newspaper className="h-10 w-10 text-primary" />
       </div>
@@ -16,12 +16,39 @@ export default function Home() {
         passionate and dedicated students to join our various departments and
         make a difference.
       </p>
-      <Button asChild size="lg" className="mt-8">
-        <Link href="/apply">
-          Get Started
-          <ArrowRight />
-        </Link>
-      </Button>
+      <div className="mt-8 flex flex-col items-center gap-4">
+        <Button asChild size="lg">
+          <Link href="/apply">
+            Get Started
+            <ArrowRight />
+          </Link>
+        </Button>
+        <div className="flex items-center gap-4 pt-4">
+          <Button asChild variant="ghost" size="icon">
+            <Link
+              href="https://www.instagram.com"
+              target="_blank"
+              aria-label="Instagram"
+            >
+              <Instagram />
+            </Link>
+          </Button>
+          <Button asChild variant="ghost" size="icon">
+            <Link
+              href="https://www.linkedin.com"
+              target="_blank"
+              aria-label="LinkedIn"
+            >
+              <Linkedin />
+            </Link>
+          </Button>
+          <Button asChild variant="ghost" size="icon">
+            <Link href="mailto:example@example.com" aria-label="Email">
+              <Mail />
+            </Link>
+          </Button>
+        </div>
+      </div>
     </main>
   );
 }
