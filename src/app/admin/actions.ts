@@ -9,9 +9,13 @@ import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
 async function verifyAuth() {
-  const cookieStore = cookies();
-  if (cookieStore.get('admin-auth')?.value !== 'true') {
-    throw new Error('Not authorized');
+  try {
+    const cookieStore = cookies();
+    if (cookieStore.get('admin-auth')?.value !== 'true') {
+      redirect('/admin');
+    }
+  } catch (error) {
+    redirect('/admin');
   }
 }
 

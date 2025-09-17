@@ -28,13 +28,9 @@ export default function AdminPage() {
     redirect('/admin');
   }
 
-  return (
-    <main className="flex min-h-dvh flex-col items-center justify-center bg-background p-4 sm:p-8">
-      {isAuthenticated ? (
-        <AdminDashboard onLogout={handleLogout} />
-      ) : (
-        <AdminLogin onLogin={handleLogin} />
-      )}
-    </main>
-  );
+  if (isAuthenticated) {
+    return <AdminDashboard onLogout={handleLogout} />;
+  }
+
+  return <AdminLogin onLogin={handleLogin} />;
 }
