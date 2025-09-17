@@ -7,7 +7,7 @@ import { ArrowLeft, ArrowRight, CheckCircle2, Loader2 } from "lucide-react";
 
 import { applicationSchema, type ApplicationData } from "@/app/schema";
 import { submitApplication } from "@/app/actions";
-import { DEPARTMENTS } from "@/lib/constants";
+import { DEPARTMENTS, DEPARTMENT_DESCRIPTIONS } from "@/lib/constants";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 
@@ -31,6 +31,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  Card,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 export function ApplicationForm() {
   const [currentStep, setCurrentStep] = useState(0);
@@ -54,12 +60,14 @@ export function ApplicationForm() {
     },
   });
 
+  const primaryPreference = form.watch("primaryPreference");
+
   const processForm = async (data: ApplicationData) => {
     setIsSubmitting(true);
     const result = await submitApplication(data);
 
     if (result.success) {
-      setCurrentStep(3); // Updated to 3 for the success step
+      setCurrentStep(4);
     } else {
       toast({
         title: "Submission Failed",
@@ -74,13 +82,8 @@ export function ApplicationForm() {
     const fields: FieldPath<ApplicationData>[][] = [
       ["name", "regNo", "branchAndYear", "email", "phone"],
       ["previousExperience"],
-      [
-        "primaryPreference",
-        "secondaryPreference",
-        "essay1",
-        "essay2",
-        "portfolioLink",
-      ],
+      ["primaryPreference", "secondaryPreference"],
+      ["essay1", "essay2", "portfolioLink"],
     ];
 
     const output = await form.trigger(fields[currentStep], {
@@ -89,10 +92,9 @@ export function ApplicationForm() {
 
     if (!output) return;
 
-    if (currentStep < 2) {
+    if (currentStep < 3) {
       setCurrentStep((prev) => prev + 1);
     } else {
-      // This is the final step before submission, so we should submit
       await form.handleSubmit(processForm)();
     }
   };
@@ -101,7 +103,7 @@ export function ApplicationForm() {
     setCurrentStep((prev) => prev - 1);
   };
 
-  if (currentStep === 3) {
+  if (currentStep === 4) {
     return (
       <div className="py-8 text-center animate-in fade-in-50 duration-500">
         <CheckCircle2 className="mx-auto h-16 w-16 text-primary" />
@@ -119,10 +121,7 @@ export function ApplicationForm() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(processForm)} className="space-y-8">
-        <Progress
-          value={((currentStep + 1) / 3) * 100}
-          className="mb-8"
-        />
+        <Progress value={((currentStep + 1) / 4) * 100} className="mb-8" />
         <div
           className={cn(
             "space-y-6",
@@ -230,6 +229,16 @@ export function ApplicationForm() {
             currentStep === 2 ? "block animate-in fade-in-50" : "hidden"
           )}
         >
+          <div className="space-y-4">
+            {DEPARTMENT_DESCRIPTIONS.map((dept) => (
+              <Card key={dept.name}>
+                <CardHeader>
+                  <CardTitle className="text-xl">{dept.name}</CardTitle>
+                  <CardDescription>{dept.description}</CardDescription>
+                </CardHeader>
+              </Card>
+            ))}
+          </div>
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
             <FormField
               control={form.control}
@@ -265,7 +274,7 @@ export function ApplicationForm() {
                 <FormItem>
                   <FormLabel>Secondary Department</FormLabel>
                   <Select
-                    onValuecha_nge={field.onChange}
+                    onValueChange={field.onChange}
                     defaultValue={field.value}
                   >
                     <FormControl>
@@ -275,7 +284,15 @@ export function ApplicationForm() {
                     </FormControl>
                     <SelectContent>
                       {DEPARTMENTS.map((dept) => (
-                        <SelectItem key={dept} value={dept}>
+                        <SelectItem
+                          key={dept}
+                          value={dept}
+                          disabled={dept === primaryPreference}
+                          className={cn(
+                            dept === primaryPreference &&
+                              "text-muted-foreground/50"
+                          )}
+                        >
                           {dept}
                         </SelectItem>
                       ))}
@@ -286,6 +303,14 @@ export function ApplicationForm() {
               )}
             />
           </div>
+        </div>
+
+        <div
+          className={cn(
+            "space-y-6",
+            currentStep === 3 ? "block animate-in fade-in-50" : "hidden"
+          )}
+        >
           <FormField
             control={form.control}
             name="essay1"
@@ -327,9 +352,7 @@ export function ApplicationForm() {
             name="portfolioLink"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>
-                  Portfolio/Work Samples Link (Optional)
-                </FormLabel>
+                <FormLabel>Portfolio/Work Samples Link (Optional)</FormLabel>
                 <FormControl>
                   <Input
                     placeholder="https://your-portfolio.com"
@@ -361,7 +384,7 @@ export function ApplicationForm() {
             type="button"
             onClick={nextStep}
             variant="default"
-            className={cn(currentStep === 2 && "hidden")}
+            className={cn(currentStep === 3 && "hidden")}
             disabled={isSubmitting}
           >
             Next
@@ -370,7 +393,7 @@ export function ApplicationForm() {
           <Button
             type="submit"
             variant="default"
-            className={cn(currentStep !== 2 && "hidden")}
+            className={cn(currentStep !== 3 && "hidden")}
             disabled={isSubmitting}
           >
             {isSubmitting && <Loader2 className="animate-spin" />}
