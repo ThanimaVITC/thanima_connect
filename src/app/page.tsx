@@ -138,8 +138,8 @@ export default function Home() {
           <CarouselNext className="mr-12" />
         </Carousel>
       </section>
-      <footer className="py-8 text-center text-sm text-muted-foreground">
-        thanima 2025
+      <footer className="w-full border-t mt-16 py-8 text-center text-sm text-muted-foreground">
+        <p>&copy; 2025 THANIMA. All rights reserved.</p>
       </footer>
     </main>
   );
