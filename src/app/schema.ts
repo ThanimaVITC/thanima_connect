@@ -33,6 +33,7 @@ export const applicationSchema = z
       .min(1, "Please answer this question."),
     skillsAndExperience: z.string().min(1, "Please answer this question."),
     portfolioLink: z.string().url("Invalid URL.").optional().or(z.literal("")),
+    resume: z.any().optional(),
     bonusEssay1: z.string().optional(),
     bonusEssay2: z.string().optional(),
   })

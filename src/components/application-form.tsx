@@ -111,7 +111,12 @@ export function ApplicationForm() {
       ["name", "regNo", "branchAndYear", "email", "phone"],
       ["previousExperience"],
       ["primaryPreference", "secondaryPreference"],
-      ["departmentJustification", "skillsAndExperience", "portfolioLink"],
+      [
+        "departmentJustification",
+        "skillsAndExperience",
+        "portfolioLink",
+        "resume",
+      ],
       ["bonusEssay1", "bonusEssay2"],
     ];
 
@@ -421,6 +426,26 @@ export function ApplicationForm() {
                 </FormControl>
                 <FormDescription className="font-code">
                   Link to your portfolio, GitHub, Behance, etc.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="resume"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Upload Resume/CV (Optional)</FormLabel>
+                <FormControl>
+                  <Input
+                    type="file"
+                    accept=".pdf,.doc,.docx"
+                    onChange={(e) => field.onChange(e.target.files?.[0])}
+                  />
+                </FormControl>
+                <FormDescription>
+                  Upload your resume or a document with your work.
                 </FormDescription>
                 <FormMessage />
               </FormItem>
