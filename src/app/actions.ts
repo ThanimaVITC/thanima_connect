@@ -1,6 +1,7 @@
 "use server";
 
 import { applicationSchema } from "@/app/schema";
+import clientPromise from "@/lib/mongodb";
 
 export async function submitApplication(data: unknown) {
   try {
@@ -10,12 +11,14 @@ export async function submitApplication(data: unknown) {
       console.error("Validation Error:", parsedData.error.flatten());
       return { success: false, error: "Invalid data provided." };
     }
+    
+    const client = await clientPromise;
+    const db = client.db(process.env.DATABASE_NAME);
+    const collection = db.collection("submissions");
+    await collection.insertOne(parsedData.data);
 
-    // In a real application, you would save this data to a database.
-    console.log("New application received:", parsedData.data);
 
-    // Simulate a network delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    console.log("New application received and saved:", parsedData.data);
 
     return { success: true, data: parsedData.data };
   } catch (error) {
