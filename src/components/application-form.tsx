@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm, type FieldPath } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowLeft, ArrowRight, CheckCircle2, Loader2 } from "lucide-react";
@@ -37,13 +37,34 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Skeleton } from "./ui/skeleton";
 
 const TOTAL_STEPS = 5;
+const LOCAL_STORAGE_KEY = "thanima-application-submitted";
+
+const AlreadyApplied = () => (
+  <div className="py-8 text-center">
+    <CheckCircle2 className="mx-auto h-16 w-16 text-primary" />
+    <h2 className="mt-4 font-headline text-2xl font-bold">
+      Application Already Submitted!
+    </h2>
+    <p className="mt-2 text-muted-foreground">
+      Thank you for your interest. We have already received an application from
+      this browser.
+    </p>
+  </div>
+);
 
 export function ApplicationForm() {
   const [currentStep, setCurrentStep] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [hasApplied, setHasApplied] = useState<boolean | null>(null);
   const { toast } = useToast();
+
+  useEffect(() => {
+    const submitted = localStorage.getItem(LOCAL_STORAGE_KEY);
+    setHasApplied(submitted === "true");
+  }, []);
 
   const form = useForm<ApplicationData>({
     resolver: zodResolver(applicationSchema),
@@ -71,6 +92,7 @@ export function ApplicationForm() {
     const result = await submitApplication(data);
 
     if (result.success) {
+      localStorage.setItem(LOCAL_STORAGE_KEY, "true");
       setCurrentStep(TOTAL_STEPS);
     } else {
       toast({
@@ -107,6 +129,21 @@ export function ApplicationForm() {
   const prevStep = () => {
     setCurrentStep((prev) => prev - 1);
   };
+
+  if (hasApplied === null) {
+    return (
+      <div className="space-y-4 p-8">
+        <Skeleton className="h-4 w-full" />
+        <Skeleton className="h-10 w-full" />
+        <Skeleton className="h-10 w-full" />
+        <Skeleton className="h-10 w-full" />
+      </div>
+    );
+  }
+
+  if (hasApplied) {
+    return <AlreadyApplied />;
+  }
 
   if (currentStep === TOTAL_STEPS) {
     return (
