@@ -316,10 +316,13 @@ export function ApplicationForm() {
             name="essay1"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Why do you want to be a part of Thanima?</FormLabel>
+                <FormLabel>
+                  If you had to describe about one malayalam movie, what would
+                  it be and why? (Optional)
+                </FormLabel>
                 <FormControl>
                   <Textarea
-                    placeholder="Tell us about your motivation..."
+                    placeholder="Tell us about the movie..."
                     className="min-h-[120px]"
                     {...field}
                   />
@@ -334,11 +337,12 @@ export function ApplicationForm() {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>
-                  Describe a time you worked in a team to overcome a challenge.
+                  What’s one unforgettable memory or cultural tradition from
+                  Kerala that inspires you? (Optional)
                 </FormLabel>
                 <FormControl>
                   <Textarea
-                    placeholder="Describe the situation, your role, and the outcome..."
+                    placeholder="Describe the memory or tradition..."
                     className="min-h-[120px]"
                     {...field}
                   />

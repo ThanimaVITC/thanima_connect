@@ -28,8 +28,8 @@ export const applicationSchema = z
     secondaryPreference: z.enum(DEPARTMENTS, {
       errorMap: () => ({ message: "Please select a secondary department." }),
     }),
-    essay1: z.string().min(100, "Answer must be at least 100 characters."),
-    essay2: z.string().min(100, "Answer must be at least 100 characters."),
+    essay1: z.string().optional(),
+    essay2: z.string().optional(),
     portfolioLink: z.string().url("Invalid URL.").optional().or(z.literal("")),
   })
   .refine((data) => data.primaryPreference !== data.secondaryPreference, {
