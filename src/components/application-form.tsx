@@ -181,9 +181,9 @@ export function ApplicationForm() {
   if (currentStep === TOTAL_STEPS) {
     return (
         <div className="py-8 text-center animate-in fade-in-50 duration-500">
-        <div className="mx-auto flex h-20 w-20 items-center justify-center mb-4">
-          <img src="/logo 2.png" alt="Thanima Logo" className="h-full w-full object-contain" />
-        </div>
+          <div className="mx-auto flex h-32 w-32 md:h-40 md:w-40 items-center justify-center mb-4">
+            <img src="/logo 2.png" alt="Thanima Logo" className="h-full w-full object-contain" />
+          </div>
         <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
           <CheckCircle2 className="h-10 w-10 text-primary animate-in zoom-in-50" />
         </div>
