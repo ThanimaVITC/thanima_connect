@@ -15,7 +15,7 @@ export default function ApplyPage() {
         <div className="content-backdrop">
           <Card className="border-0 shadow-none bg-transparent">
             <CardHeader className="text-center">
-            <div className="mx-auto mb-6 flex h-24 w-24 items-center justify-center">
+            <div className="mx-auto mb-6 flex h-32 w-32 md:h-40 md:w-40 lg:h-48 lg:w-48 items-center justify-center">
               <img src="/logo 2.png" alt="Thanima Logo" className="h-full w-full object-contain" />
             </div>
               <CardTitle className="font-headline text-3xl sm:text-4xl tracking-tight text-overlay hero-title">
