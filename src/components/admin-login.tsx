@@ -22,12 +22,12 @@ export function AdminLogin({
   const error = searchParams.get('error');
 
   return (
-    <Card className="w-full max-w-sm">
+    <Card className="w-full max-w-sm border-0 shadow-none bg-transparent">
       <CardHeader className="text-center">
-        <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
+        <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center">
           <Lock className="h-8 w-8 text-primary" />
         </div>
-        <CardTitle className="font-headline text-2xl">Admin Access</CardTitle>
+        <CardTitle className="font-headline text-2xl text-foreground">Admin Access</CardTitle>
         <CardDescription>
           Enter the password to access the dashboard.
         </CardDescription>
@@ -45,7 +45,7 @@ export function AdminLogin({
             />
           </div>
            {error && <p className="text-sm font-medium text-destructive">{error}</p>}
-          <Button type="submit" className="w-full">
+          <Button type="submit" className="w-full button-glow interactive-element pulse-animation glow-effect">
             Login
           </Button>
         </form>

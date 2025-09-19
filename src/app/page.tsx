@@ -26,7 +26,7 @@ export default function Home() {
     <main className="flex min-h-dvh flex-col items-center p-4 sm:p-6 lg:p-8">
       <ScrollAnimation />
       <section className="flex flex-col items-center justify-center text-center py-12 sm:py-16 md:py-20 lg:py-24">
-      <div className="mx-auto mb-8 flex h-32 w-32 md:h-40 md:w-40 items-center justify-center logo-container">
+      <div className="mx-auto mb-8 flex h-48 w-48 md:h-56 md:w-56 lg:h-64 lg:w-64 items-center justify-center logo-container">
          <img src="/thanima logo.png" alt="Thanima Logo"  className="h-full w-full object-contain" />
       </div>
 
@@ -40,14 +40,14 @@ export default function Home() {
           and make a difference.
         </p>
         <div className="mt-8 flex flex-col items-center gap-4 hero-cta">
-          <Button asChild size="lg" className="button-glow">
+          <Button asChild size="lg" className="button-glow interactive-element pulse-animation glow-effect">
             <Link href="/apply">
               Get Started
               <ArrowRight className="ml-2" />
             </Link>
           </Button>
           <div className="flex items-center gap-4 pt-4">
-            <Button asChild variant="ghost" size="icon" className="social-icon">
+            <Button asChild variant="ghost" size="icon" className="social-icon interactive-element glow-effect">
               <Link
                 href="https://www.instagram.com/thanimavitc/"
                 target="_blank"
@@ -56,7 +56,7 @@ export default function Home() {
                 <Instagram size={24} />
               </Link>
             </Button>
-            <Button asChild variant="ghost" size="icon" className="social-icon">
+            <Button asChild variant="ghost" size="icon" className="social-icon interactive-element glow-effect">
               <Link
                 href="https://www.linkedin.com/company/thanima-literary-club/"
                 target="_blank"
@@ -65,7 +65,7 @@ export default function Home() {
                 <Linkedin size={24} />
               </Link>
             </Button>
-            <Button asChild variant="ghost" size="icon" className="social-icon">
+            <Button asChild variant="ghost" size="icon" className="social-icon interactive-element glow-effect">
               <Link href="mailto:thanimamalayalamliteraryclub@gmail.com" aria-label="Email">
                 <Mail size={24} />
               </Link>
@@ -86,7 +86,7 @@ export default function Home() {
         </div>
         <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
           {DEPARTMENT_DESCRIPTIONS.map((dept) => (
-            <Card key={dept.name} className="h-full card-hover">
+            <Card key={dept.name} className="h-full card-hover interactive-element glow-effect">
               <CardHeader className="pb-3">
                 <CardTitle className="text-lg sm:text-xl">{dept.name}</CardTitle>
               </CardHeader>
