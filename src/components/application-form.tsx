@@ -500,7 +500,7 @@ export function ApplicationForm() {
               <FormItem>
                 <FormLabel>
                   What skills, prior experience, or qualities make you suitable
-                  for these departments?
+                  for these departments (attack links if any)?
                 </FormLabel>
                 <FormControl>
                   <Textarea
@@ -557,8 +557,7 @@ export function ApplicationForm() {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>
-                  If you had to describe about one malayalam movie, what would
-                  it be and why? (Optional)
+                  If u had to describe yourself as a malayalam movie or charecter which would it be ? (Optional)
                 </FormLabel>
                 <FormControl>
                   <Textarea
