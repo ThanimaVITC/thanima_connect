@@ -47,6 +47,9 @@ export const applicationSchema = z
     secondaryPreference: z.enum(DEPARTMENTS, {
       errorMap: () => ({ message: "Please select a secondary department." }),
     }),
+    tertiaryPreference: z.enum(DEPARTMENTS, {
+      errorMap: () => ({ message: "Please select a tertiary department." }),
+    }),
     departmentJustification: z
       .string()
       .min(1, "Please answer this question."),
@@ -66,6 +69,14 @@ export const applicationSchema = z
   .refine((data) => data.primaryPreference !== data.secondaryPreference, {
     message: "Primary and secondary preferences cannot be the same.",
     path: ["secondaryPreference"],
+  })
+  .refine((data) => data.primaryPreference !== data.tertiaryPreference, {
+    message: "Primary and tertiary preferences cannot be the same.",
+    path: ["tertiaryPreference"],
+  })
+  .refine((data) => data.secondaryPreference !== data.tertiaryPreference, {
+    message: "Secondary and tertiary preferences cannot be the same.",
+    path: ["tertiaryPreference"],
   });
 
 export type ApplicationData = z.infer<typeof applicationSchema>;

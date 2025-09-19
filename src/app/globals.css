@@ -78,7 +78,7 @@
   }
   body {
     @apply text-foreground;
-    background-image: url('/bg img.png');
+    background-image: url('/bg img.webp');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -87,17 +87,6 @@
     position: relative;
   }
   
-  body::before {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
-    pointer-events: none;
-    z-index: -1;
-  }
   
   /* Add background overlay for better readability */
   .text-overlay {
@@ -440,6 +429,26 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+  }
+
+  /* Enhanced responsiveness */
+  @media (max-width: 640px) {
+    body {
+      font-size: 14px;
+    }
+  }
+
+  @media (min-width: 641px) and (max-width: 768px) {
+    body {
+      font-size: 15px;
+    }
+  }
+
+  @media (min-width: 769px) {
+    body {
+      font-size: 16px;
+    }
   }
 
   /* Enhanced typography */
@@ -527,6 +536,129 @@
     cursor: not-allowed !important;
   }
 
+  /* Awesome interactive effects */
+  .interactive-element {
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    cursor: pointer;
+  }
+
+  .interactive-element:hover {
+    transform: translateY(-2px) scale(1.02);
+    filter: brightness(1.1);
+  }
+
+  .interactive-element:active {
+    transform: translateY(0) scale(0.98);
+  }
+
+  /* Floating animation for special elements */
+  .float-animation {
+    animation: float 3s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+  }
+
+  /* Pulse animation for CTAs */
+  .pulse-animation {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.8; }
+  }
+
+  /* Glow effect for interactive elements */
+  .glow-effect {
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+    transition: box-shadow 0.3s ease;
+  }
+
+  .glow-effect:hover {
+    box-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
+  }
+
+  /* Enhanced mobile responsiveness */
+  @media (max-width: 480px) {
+    .content-backdrop {
+      padding: 1rem;
+      margin: 0.25rem;
+      border-radius: 16px;
+    }
+    
+    .gallery-item {
+      height: 160px;
+      border-radius: 20px;
+    }
+    
+    .button-glow {
+      padding: 0.75rem 1.5rem;
+      font-size: 0.9rem;
+    }
+  }
+
+  @media (max-width: 320px) {
+    .content-backdrop {
+      padding: 0.75rem;
+      margin: 0.125rem;
+    }
+    
+    .gallery-item {
+      height: 140px;
+    }
+  }
+
+  /* Enhanced tablet responsiveness */
+  @media (min-width: 481px) and (max-width: 768px) {
+    .content-backdrop {
+      padding: 1.5rem;
+      margin: 0.5rem;
+    }
+    
+    .gallery-item {
+      height: 180px;
+    }
+  }
+
+  /* Enhanced desktop responsiveness */
+  @media (min-width: 1200px) {
+    .content-backdrop {
+      padding: 2.5rem;
+      margin: 1.5rem;
+    }
+    
+    .gallery-item {
+      height: 240px;
+    }
+  }
+
+  /* Ultra-wide screen support */
+  @media (min-width: 1920px) {
+    .content-backdrop {
+      padding: 3rem;
+      margin: 2rem;
+    }
+    
+    .gallery-item {
+      height: 280px;
+    }
+  }
+
+  /* Touch-friendly interactions */
+  @media (hover: none) and (pointer: coarse) {
+    .interactive-element:hover {
+      transform: none;
+    }
+    
+    .interactive-element:active {
+      transform: scale(0.95);
+      transition: transform 0.1s ease;
+    }
+  }
+
   /* Reduced motion support */
   @media (prefers-reduced-motion: reduce) {
     *,
@@ -535,6 +667,14 @@
       animation-duration: 0.01ms !important;
       animation-iteration-count: 1 !important;
       transition-duration: 0.01ms !important;
+    }
+    
+    .float-animation {
+      animation: none;
+    }
+    
+    .pulse-animation {
+      animation: none;
     }
   }
 }

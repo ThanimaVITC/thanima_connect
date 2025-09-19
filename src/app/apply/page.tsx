@@ -32,7 +32,7 @@ export default function ApplyPage() {
           </Card>
         </div>
         <p className="mt-6 text-center text-sm text-muted-foreground text-overlay">
-          Developed by Thanima Team
+        © 2025 THANIMA. All rights reserved.
         </p>
       </div>
     </main>

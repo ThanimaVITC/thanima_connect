@@ -90,6 +90,7 @@ export function ApplicationForm() {
       previousExperience: "",
       primaryPreference: "" as any,
       secondaryPreference: "" as any,
+      tertiaryPreference: "" as any,
       departmentJustification: "",
       skillsAndExperience: "",
       resume: undefined,
@@ -101,6 +102,7 @@ export function ApplicationForm() {
 
   const primaryPreference = form.watch("primaryPreference");
   const secondaryPreference = form.watch("secondaryPreference");
+  const tertiaryPreference = form.watch("tertiaryPreference");
 
   const processForm = async (data: ApplicationData) => {
     setIsSubmitting(true);
@@ -135,7 +137,7 @@ export function ApplicationForm() {
     const fieldsPerStep: FieldPath<ApplicationData>[][] = [
       ["name", "regNo", "branchAndYear", "email", "phone"],
       ["previousExperience"],
-      ["primaryPreference", "secondaryPreference"],
+      ["primaryPreference", "secondaryPreference", "tertiaryPreference"],
       [
         "departmentJustification",
         "skillsAndExperience",
@@ -178,7 +180,10 @@ export function ApplicationForm() {
 
   if (currentStep === TOTAL_STEPS) {
     return (
-      <div className="py-8 text-center animate-in fade-in-50 duration-500">
+        <div className="py-8 text-center animate-in fade-in-50 duration-500">
+        <div className="mx-auto flex h-20 w-20 items-center justify-center mb-4">
+          <img src="/logo 2.png" alt="Thanima Logo" className="h-full w-full object-contain" />
+        </div>
         <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
           <CheckCircle2 className="h-10 w-10 text-primary animate-in zoom-in-50" />
         </div>
@@ -319,7 +324,7 @@ export function ApplicationForm() {
               <FormItem>
                 <FormLabel>
                   Have you previously been part of Thanima or any other
-                  cultural/literary club? If yes, please specify your role.
+                  cultural/literary club? If yes, please specify your role and club name.
                 </FormLabel>
                 <FormControl>
                   <Textarea
@@ -350,7 +355,7 @@ export function ApplicationForm() {
               </Card>
             ))}
           </div>
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             <FormField
               control={form.control}
               name="primaryPreference"
@@ -413,6 +418,41 @@ export function ApplicationForm() {
                 </FormItem>
               )}
             />
+            <FormField
+              control={form.control}
+              name="tertiaryPreference"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Tertiary Department</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a department" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {DEPARTMENTS.map((dept) => (
+                        <SelectItem
+                          key={dept}
+                          value={dept}
+                          disabled={dept === primaryPreference || dept === secondaryPreference}
+                          className={cn(
+                            (dept === primaryPreference || dept === secondaryPreference) &&
+                              "text-muted-foreground/50"
+                          )}
+                        >
+                          {dept}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
           </div>
         </div>
 
@@ -430,6 +470,9 @@ export function ApplicationForm() {
               )}
               {secondaryPreference && (
                 <Badge variant="secondary">2: {secondaryPreference}</Badge>
+              )}
+              {tertiaryPreference && (
+                <Badge variant="secondary">3: {tertiaryPreference}</Badge>
               )}
             </div>
           </div>
@@ -480,7 +523,6 @@ export function ApplicationForm() {
                   <Input
                     type="file"
                     accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.mp4,.mov,.avi"
-                    ref={fileInputRef}
                     onChange={(e) => {
                       const file = e.target.files?.[0];
                       onChange(file);
@@ -556,7 +598,7 @@ export function ApplicationForm() {
             type="button"
             onClick={prevStep}
             variant="secondary"
-            className={cn(currentStep === 0 && "invisible")}
+            className={cn(currentStep === 0 && "invisible", "button-glow interactive-element")}
             disabled={isSubmitting}
           >
             <ArrowLeft />
@@ -565,6 +607,7 @@ export function ApplicationForm() {
           <Button
             type="submit"
             variant="default"
+            className="button-glow interactive-element pulse-animation glow-effect"
             disabled={isSubmitting}
           >
             {currentStep === TOTAL_STEPS - 1 ? (

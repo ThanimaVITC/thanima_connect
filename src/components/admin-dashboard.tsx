@@ -105,9 +105,10 @@ export function AdminDashboard({ onLogout }: { onLogout: () => Promise<void> }) 
   };
 
   return (
-    <main className="flex min-h-dvh flex-col items-center justify-center bg-background p-4 sm:p-8 w-full">
+    <main className="flex min-h-dvh flex-col items-center justify-center p-4 sm:p-8 w-full">
       <div className="w-full max-w-7xl">
-        <Card>
+        <div className="content-backdrop">
+          <Card className="border-0 shadow-none bg-transparent">
           <CardHeader>
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
               <div>
@@ -122,6 +123,7 @@ export function AdminDashboard({ onLogout }: { onLogout: () => Promise<void> }) 
                 <Button
                   onClick={handleExportCsv}
                   disabled={exportingCsv || loading}
+                  className="button-glow interactive-element"
                 >
                   <FileSpreadsheet />
                   {exportingCsv ? 'Exporting...' : 'Export CSV'}
@@ -129,12 +131,13 @@ export function AdminDashboard({ onLogout }: { onLogout: () => Promise<void> }) 
                 <Button
                   onClick={handleDownloadFiles}
                   disabled={exportingFiles || loading}
+                  className="button-glow interactive-element"
                 >
                   <Download />
                   {exportingFiles ? 'Downloading...' : 'Download Files'}
                 </Button>
                 <form action={onLogout}>
-                  <Button variant="outline" type="submit"><LogOut/>Logout</Button>
+                  <Button variant="outline" type="submit" className="button-glow interactive-element"><LogOut/>Logout</Button>
                 </form>
               </div>
             </div>
@@ -159,6 +162,7 @@ export function AdminDashboard({ onLogout }: { onLogout: () => Promise<void> }) 
                       <TableHead>Phone</TableHead>
                       <TableHead>Primary</TableHead>
                       <TableHead>Secondary</TableHead>
+                      <TableHead>Tertiary</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -171,6 +175,7 @@ export function AdminDashboard({ onLogout }: { onLogout: () => Promise<void> }) 
                         <TableCell>{submission.phone}</TableCell>
                         <TableCell>{submission.primaryPreference}</TableCell>
                         <TableCell>{submission.secondaryPreference}</TableCell>
+                        <TableCell>{submission.tertiaryPreference}</TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
@@ -178,7 +183,8 @@ export function AdminDashboard({ onLogout }: { onLogout: () => Promise<void> }) 
               </div>
             )}
           </CardContent>
-        </Card>
+          </Card>
+        </div>
       </div>
     </main>
   );
