@@ -5,6 +5,7 @@ import {
   exportSubmissionsAsCsv,
   getSubmissions,
   downloadAllFiles,
+  deleteSubmission,
 } from '@/app/admin/actions';
 import type { ApplicationData } from '@/app/schema';
 import { Button } from '@/components/ui/button';
@@ -24,7 +25,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Skeleton } from './ui/skeleton';
-import { Download, FileSpreadsheet, LogOut } from 'lucide-react';
+import { Download, FileSpreadsheet, LogOut, Trash2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 export function AdminDashboard({ onLogout }: { onLogout: () => Promise<void> }) {
@@ -104,6 +105,31 @@ export function AdminDashboard({ onLogout }: { onLogout: () => Promise<void> }) 
     }
   };
 
+  const handleDeleteSubmission = async (submissionId: string) => {
+    if (!window.confirm('Are you sure you want to delete this submission?')) {
+      return;
+    }
+
+    try {
+      const { success, error } = await deleteSubmission(submissionId);
+      if (!success) {
+        throw new Error(error);
+      }
+      
+      setSubmissions(submissions.filter(s => s._id !== submissionId));
+      toast({
+        title: 'Success',
+        description: 'Submission deleted successfully',
+      });
+    } catch (error: any) {
+      toast({
+        title: 'Delete Failed',
+        description: error.message || 'Could not delete submission.',
+        variant: 'destructive',
+      });
+    }
+  };
+
   return (
     <main className="flex min-h-dvh flex-col items-center justify-center p-4 sm:p-8 w-full">
       <div className="w-full max-w-7xl">
@@ -155,6 +181,8 @@ export function AdminDashboard({ onLogout }: { onLogout: () => Promise<void> }) 
                 <Table>
                   <TableHeader>
                     <TableRow>
+                      <TableHead>S.No</TableHead>
+                      <TableHead>Action</TableHead>
                       <TableHead>Name</TableHead>
                       <TableHead>Reg No</TableHead>
                       <TableHead>Branch & Year</TableHead>
@@ -168,6 +196,16 @@ export function AdminDashboard({ onLogout }: { onLogout: () => Promise<void> }) 
                   <TableBody>
                     {submissions.map((submission, index) => (
                       <TableRow key={index}>
+                        <TableCell>{index + 1}</TableCell>
+                        <TableCell>
+                          <Button 
+                            variant="destructive" 
+                            size="sm"
+                            onClick={() => handleDeleteSubmission(submission._id)}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </TableCell>
                         <TableCell>{submission.name}</TableCell>
                         <TableCell>{submission.regNo}</TableCell>
                         <TableCell>{submission.branchAndYear}</TableCell>

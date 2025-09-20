@@ -132,3 +132,24 @@ export async function downloadAllFiles(): Promise<{
     return { content: '', error: 'Failed to create zip file.' };
   }
 }
+
+export async function deleteSubmission(submissionId: string): Promise<{ success: boolean; error?: string }> {
+  await verifyAuth();
+  try {
+    const client = await clientPromise;
+    const db = client.db(process.env.DATABASE_NAME);
+    
+    const result = await db.collection('submissions').deleteOne({ 
+      _id: new ObjectId(submissionId) 
+    });
+    
+    if (result.deletedCount === 0) {
+      return { success: false, error: 'Submission not found' };
+    }
+
+    return { success: true };
+  } catch (error) {
+    console.error('Error deleting submission:', error);
+    return { success: false, error: 'Failed to delete submission' };
+  }
+}
