@@ -73,7 +73,6 @@ export function ApplicationForm() {
   const [currentStep, setCurrentStep] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [hasApplied, setHasApplied] = useState<boolean | null>(null);
-  const [uploadProgress, setUploadProgress] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
   const { toast } = useToast();
   const fileInputRef = React.useRef<HTMLInputElement>(null);
@@ -111,68 +110,29 @@ export function ApplicationForm() {
 
   const handleFileUpload = async (file: File) => {
     setIsUploading(true);
-    setUploadProgress(0);
-
     const formData = new FormData();
     formData.append("file", file);
 
-    const xhr = new XMLHttpRequest();
-    xhr.open("POST", "/api/upload", true); // We will create this API route
+    const result = await uploadFile(formData);
 
-    xhr.upload.onprogress = (event) => {
-      if (event.lengthComputable) {
-        const percentComplete = Math.round((event.loaded / event.total) * 100);
-        setUploadProgress(percentComplete);
-      }
-    };
+    setIsUploading(false);
 
-    xhr.onload = async () => {
-      setIsUploading(false);
-      if (xhr.status === 200) {
-        const result = JSON.parse(xhr.responseText);
-        if (result.success && result.url) {
-          form.setValue("resumeUrl", result.url);
-          toast({
-            title: "Upload Successful",
-            description: "Your file has been uploaded.",
-          });
-        } else {
-          toast({
-            title: "Upload Failed",
-            description: result.error || "Could not upload file.",
-            variant: "destructive",
-          });
-        }
-      } else {
-        toast({
-          title: "Upload Failed",
-          description: "An unexpected error occurred during upload.",
-          variant: "destructive",
-        });
-      }
-    };
-
-    xhr.onerror = () => {
-      setIsUploading(false);
+    if (result.success && result.url) {
+      form.setValue("resumeUrl", result.url);
+      form.setValue("resume", file); // keep file object for validation
+      toast({
+        title: "Upload Successful",
+        description: "Your file has been uploaded.",
+      });
+    } else {
+      form.setValue("resume", undefined);
+      form.setValue("resumeUrl", "");
       toast({
         title: "Upload Failed",
-        description: "A network error occurred.",
+        description: result.error || "Could not upload file.",
         variant: "destructive",
       });
-    };
-    
-    // This is a workaround to use the server action
-    const uploadResult = await uploadFile(formData);
-    if(uploadResult.success && uploadResult.url) {
-        form.setValue('resumeUrl', uploadResult.url);
-        toast({ title: 'Upload Successful', description: 'Your file has been uploaded.' });
-    } else {
-        toast({ title: 'Upload Failed', description: uploadResult.error || 'Could not upload file.', variant: 'destructive' });
     }
-    setIsUploading(false);
-    setUploadProgress(100);
-
-
   };
 
   const processForm = async (data: ApplicationData) => {
@@ -587,7 +547,6 @@ export function ApplicationForm() {
                     onChange={(e) => {
                       const file = e.target.files?.[0];
                       if (file) {
-                        onChange(file);
                         handleFileUpload(file);
                       }
                     }}
@@ -600,18 +559,12 @@ export function ApplicationForm() {
                         variant="outline"
                         disabled={isUploading}
                     >
-                        <Upload className="mr-2 h-4 w-4" />
-                        {value?.name ? "Change file" : "Choose file"}
+                        {isUploading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Upload className="mr-2 h-4 w-4" />}
+                        {isUploading ? "Uploading..." : value?.name ? "Change file" : "Choose file"}
                     </Button>
-                    {value?.name && <span className="text-sm text-muted-foreground">{value.name}</span>}
+                    {value?.name && !isUploading && <span className="text-sm text-muted-foreground">{value.name}</span>}
                  </div>
                 </FormControl>
-                 {isUploading && (
-                    <div className="space-y-1">
-                        <Progress value={uploadProgress} className="w-full" />
-                        <p className="text-sm text-muted-foreground">{uploadProgress}% uploaded</p>
-                    </div>
-                )}
                 {form.getValues("resumeUrl") && !isUploading && (
                   <div className="flex items-center text-sm text-green-600">
                     <CheckCircle2 className="mr-2 h-4 w-4" />
@@ -715,3 +668,5 @@ export function ApplicationForm() {
     </Form>
   );
 }
+
+    
