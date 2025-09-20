@@ -170,6 +170,7 @@ export function AdminDashboard({ onLogout }: { onLogout: () => Promise<void> }) 
                     {submissions.map((submission, index) => (
                       <TableRow key={index}>
                         <TableCell>{index + 1}</TableCell>
+<TableCell>{submission.name}</TableCell>
                         <TableCell>{submission.regNo}</TableCell>
                         <TableCell>{submission.branchAndYear}</TableCell>
                         <TableCell>{submission.email}</TableCell>
