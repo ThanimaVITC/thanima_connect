@@ -13,10 +13,12 @@ import {
   Linkedin,
   Loader2,
   Mail,
+  Upload,
 } from "lucide-react";
 
 import { applicationSchema, type ApplicationData } from "@/app/schema";
 import { submitApplication } from "@/app/actions";
+import { uploadFile } from "@/app/apply/actions";
 import { DEPARTMENTS, DEPARTMENT_DESCRIPTIONS } from "@/lib/constants";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
@@ -71,6 +73,8 @@ export function ApplicationForm() {
   const [currentStep, setCurrentStep] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [hasApplied, setHasApplied] = useState<boolean | null>(null);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [isUploading, setIsUploading] = useState(false);
   const { toast } = useToast();
   const fileInputRef = React.useRef<HTMLInputElement>(null);
 
@@ -94,6 +98,7 @@ export function ApplicationForm() {
       departmentJustification: "",
       skillsAndExperience: "",
       resume: undefined,
+      resumeUrl: "",
       bonusEssay1: "",
       bonusEssay2: "",
     },
@@ -104,21 +109,76 @@ export function ApplicationForm() {
   const secondaryPreference = form.watch("secondaryPreference");
   const tertiaryPreference = form.watch("tertiaryPreference");
 
+  const handleFileUpload = async (file: File) => {
+    setIsUploading(true);
+    setUploadProgress(0);
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", "/api/upload", true); // We will create this API route
+
+    xhr.upload.onprogress = (event) => {
+      if (event.lengthComputable) {
+        const percentComplete = Math.round((event.loaded / event.total) * 100);
+        setUploadProgress(percentComplete);
+      }
+    };
+
+    xhr.onload = async () => {
+      setIsUploading(false);
+      if (xhr.status === 200) {
+        const result = JSON.parse(xhr.responseText);
+        if (result.success && result.url) {
+          form.setValue("resumeUrl", result.url);
+          toast({
+            title: "Upload Successful",
+            description: "Your file has been uploaded.",
+          });
+        } else {
+          toast({
+            title: "Upload Failed",
+            description: result.error || "Could not upload file.",
+            variant: "destructive",
+          });
+        }
+      } else {
+        toast({
+          title: "Upload Failed",
+          description: "An unexpected error occurred during upload.",
+          variant: "destructive",
+        });
+      }
+    };
+
+    xhr.onerror = () => {
+      setIsUploading(false);
+      toast({
+        title: "Upload Failed",
+        description: "A network error occurred.",
+        variant: "destructive",
+      });
+    };
+    
+    // This is a workaround to use the server action
+    const uploadResult = await uploadFile(formData);
+    if(uploadResult.success && uploadResult.url) {
+        form.setValue('resumeUrl', uploadResult.url);
+        toast({ title: 'Upload Successful', description: 'Your file has been uploaded.' });
+    } else {
+        toast({ title: 'Upload Failed', description: uploadResult.error || 'Could not upload file.', variant: 'destructive' });
+    }
+    setIsUploading(false);
+    setUploadProgress(100);
+
+
+  };
+
   const processForm = async (data: ApplicationData) => {
     setIsSubmitting(true);
     
-    const formData = new FormData();
-    Object.entries(data).forEach(([key, value]) => {
-      if (value !== undefined && value !== null && value !== '') {
-        if (key === 'resume' && value instanceof File) {
-          formData.append(key, value);
-        } else if (key !== 'resume') {
-          formData.append(key, value as string);
-        }
-      }
-    });
-
-    const result = await submitApplication(formData);
+    const result = await submitApplication(data);
 
     if (result.success) {
       localStorage.setItem(LOCAL_STORAGE_KEY, "true");
@@ -520,16 +580,44 @@ export function ApplicationForm() {
               <FormItem>
                 <FormLabel>Upload a file (optional)</FormLabel>
                 <FormControl>
+                <div className="flex items-center gap-2">
                   <Input
                     type="file"
                     accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.mp4,.mov,.avi"
                     onChange={(e) => {
                       const file = e.target.files?.[0];
-                      onChange(file);
+                      if (file) {
+                        onChange(file);
+                        handleFileUpload(file);
+                      }
                     }}
-                    {...rest}
-                  />
+                    ref={fileInputRef}
+                    className="hidden"
+                    />
+                    <Button
+                        type="button"
+                        onClick={() => fileInputRef.current?.click()}
+                        variant="outline"
+                        disabled={isUploading}
+                    >
+                        <Upload className="mr-2 h-4 w-4" />
+                        {value?.name ? "Change file" : "Choose file"}
+                    </Button>
+                    {value?.name && <span className="text-sm text-muted-foreground">{value.name}</span>}
+                 </div>
                 </FormControl>
+                 {isUploading && (
+                    <div className="space-y-1">
+                        <Progress value={uploadProgress} className="w-full" />
+                        <p className="text-sm text-muted-foreground">{uploadProgress}% uploaded</p>
+                    </div>
+                )}
+                {form.getValues("resumeUrl") && !isUploading && (
+                  <div className="flex items-center text-sm text-green-600">
+                    <CheckCircle2 className="mr-2 h-4 w-4" />
+                    <span>File uploaded successfully.</span>
+                  </div>
+                )}
                 <FormDescription>
                   File Upload (Limit to: Docs, PDFs, Images, Videos. Max size: 10 MB)
                   <br />
@@ -607,7 +695,7 @@ export function ApplicationForm() {
             type="submit"
             variant="default"
             className="button-glow interactive-element pulse-animation glow-effect"
-            disabled={isSubmitting}
+            disabled={isSubmitting || isUploading}
           >
             {currentStep === TOTAL_STEPS - 1 ? (
               isSubmitting ? (

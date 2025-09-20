@@ -1,7 +1,7 @@
 'use server';
 
 import clientPromise from '@/lib/mongodb';
-import { GridFSBucket, ObjectId } from 'mongodb';
+import { ObjectId } from 'mongodb';
 import { Writable } from 'stream';
 import { ApplicationData } from '@/app/schema';
 import JSZip from 'jszip';
@@ -74,15 +74,6 @@ export async function exportSubmissionsAsCsv(): Promise<{
   }
 }
 
-async function streamToBuffer(stream: Writable): Promise<Buffer> {
-  return new Promise((resolve, reject) => {
-    const chunks: Buffer[] = [];
-    stream.on('data', (chunk) => chunks.push(chunk));
-    stream.on('end', () => resolve(Buffer.concat(chunks)));
-    stream.on('error', reject);
-  });
-}
-
 export async function downloadAllFiles(): Promise<{
   content: string;
   error?: string;
@@ -91,34 +82,25 @@ export async function downloadAllFiles(): Promise<{
   try {
     const client = await clientPromise;
     const db = client.db(process.env.DATABASE_NAME);
-    const submissions = await db.collection('submissions').find({ resumeFileId: { $ne: null } }).toArray();
+    const submissions = await db.collection('submissions').find({ resumeUrl: { $ne: null } }).toArray();
 
     if (submissions.length === 0) {
       return { content: '', error: "No files to download." };
     }
 
-    const bucket = new GridFSBucket(db, { bucketName: 'resumes' });
     const zip = new JSZip();
 
     for (const submission of submissions) {
-      if (submission.resumeFileId) {
+      if (submission.resumeUrl) {
         try {
-          const fileId = new ObjectId(submission.resumeFileId);
-          const files = await bucket.find({ _id: fileId }).toArray();
-          if (files.length === 0) {
-            console.error(`File not found in GridFS for submission ${submission.regNo}`);
+          const response = await fetch(submission.resumeUrl);
+          if (!response.ok) {
+            console.error(`Failed to fetch file for ${submission.regNo} from ${submission.resumeUrl}`);
             continue;
           }
-          const fileInfo = files[0];
-          const downloadStream = bucket.openDownloadStream(fileId);
-          
-          const chunks: Buffer[] = [];
-          for await (const chunk of downloadStream) {
-            chunks.push(chunk);
-          }
-          const buffer = Buffer.concat(chunks);
-          
-          zip.file(fileInfo.filename, buffer);
+          const buffer = await response.arrayBuffer();
+          const filename = `${submission.name.replace(/\s+/g, '_')}_${submission.regNo}${submission.resumeUrl.substring(submission.resumeUrl.lastIndexOf('.'))}`;
+          zip.file(filename, buffer);
         } catch (fileError) {
           console.error(`Failed to process file for ${submission.regNo}:`, fileError);
         }
