@@ -13,10 +13,12 @@ import {
   Linkedin,
   Loader2,
   Mail,
+  Upload,
 } from "lucide-react";
 
 import { applicationSchema, type ApplicationData } from "@/app/schema";
 import { submitApplication } from "@/app/actions";
+import { uploadFile } from "@/app/apply/actions";
 import { DEPARTMENTS, DEPARTMENT_DESCRIPTIONS } from "@/lib/constants";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
@@ -71,6 +73,7 @@ export function ApplicationForm() {
   const [currentStep, setCurrentStep] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [hasApplied, setHasApplied] = useState<boolean | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
   const { toast } = useToast();
   const fileInputRef = React.useRef<HTMLInputElement>(null);
 
@@ -94,6 +97,7 @@ export function ApplicationForm() {
       departmentJustification: "",
       skillsAndExperience: "",
       resume: undefined,
+      resumeUrl: "",
       bonusEssay1: "",
       bonusEssay2: "",
     },
@@ -104,21 +108,37 @@ export function ApplicationForm() {
   const secondaryPreference = form.watch("secondaryPreference");
   const tertiaryPreference = form.watch("tertiaryPreference");
 
+  const handleFileUpload = async (file: File) => {
+    setIsUploading(true);
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const result = await uploadFile(formData);
+
+    setIsUploading(false);
+
+    if (result.success && result.url) {
+      form.setValue("resumeUrl", result.url);
+      form.setValue("resume", file); // keep file object for validation
+      toast({
+        title: "Upload Successful",
+        description: "Your file has been uploaded.",
+      });
+    } else {
+      form.setValue("resume", undefined);
+      form.setValue("resumeUrl", "");
+      toast({
+        title: "Upload Failed",
+        description: result.error || "Could not upload file.",
+        variant: "destructive",
+      });
+    }
+  };
+
   const processForm = async (data: ApplicationData) => {
     setIsSubmitting(true);
     
-    const formData = new FormData();
-    Object.entries(data).forEach(([key, value]) => {
-      if (value !== undefined && value !== null && value !== '') {
-        if (key === 'resume' && value instanceof File) {
-          formData.append(key, value);
-        } else if (key !== 'resume') {
-          formData.append(key, value as string);
-        }
-      }
-    });
-
-    const result = await submitApplication(formData);
+    const result = await submitApplication(data);
 
     if (result.success) {
       localStorage.setItem(LOCAL_STORAGE_KEY, "true");
@@ -520,16 +540,37 @@ export function ApplicationForm() {
               <FormItem>
                 <FormLabel>Upload a file (optional)</FormLabel>
                 <FormControl>
+                <div className="flex items-center gap-2">
                   <Input
                     type="file"
                     accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.mp4,.mov,.avi"
                     onChange={(e) => {
                       const file = e.target.files?.[0];
-                      onChange(file);
+                      if (file) {
+                        handleFileUpload(file);
+                      }
                     }}
-                    {...rest}
-                  />
+                    ref={fileInputRef}
+                    className="hidden"
+                    />
+                    <Button
+                        type="button"
+                        onClick={() => fileInputRef.current?.click()}
+                        variant="outline"
+                        disabled={isUploading}
+                    >
+                        {isUploading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Upload className="mr-2 h-4 w-4" />}
+                        {isUploading ? "Uploading..." : value?.name ? "Change file" : "Choose file"}
+                    </Button>
+                    {value?.name && !isUploading && <span className="text-sm text-muted-foreground">{value.name}</span>}
+                 </div>
                 </FormControl>
+                {form.getValues("resumeUrl") && !isUploading && (
+                  <div className="flex items-center text-sm text-green-600">
+                    <CheckCircle2 className="mr-2 h-4 w-4" />
+                    <span>File uploaded successfully.</span>
+                  </div>
+                )}
                 <FormDescription>
                   File Upload (Limit to: Docs, PDFs, Images, Videos. Max size: 10 MB)
                   <br />
@@ -607,7 +648,7 @@ export function ApplicationForm() {
             type="submit"
             variant="default"
             className="button-glow interactive-element pulse-animation glow-effect"
-            disabled={isSubmitting}
+            disabled={isSubmitting || isUploading}
           >
             {currentStep === TOTAL_STEPS - 1 ? (
               isSubmitting ? (
@@ -627,3 +668,5 @@ export function ApplicationForm() {
     </Form>
   );
 }
+
+    

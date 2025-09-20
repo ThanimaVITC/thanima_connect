@@ -63,6 +63,7 @@ export const applicationSchema = z
         (file) => !file || ACCEPTED_FILE_TYPES.includes(file.type),
         "Only docs, PDFs, images, and videos are supported."
       ),
+    resumeUrl: z.string().optional(),
     bonusEssay1: z.string().optional(),
     bonusEssay2: z.string().optional(),
   })
