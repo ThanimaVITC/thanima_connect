@@ -11,7 +11,7 @@ export async function uploadFile(formData: FormData) {
   }
 
   try {
-    const blob = await put(file.name, file, {
+    const blob = await put(`${nanoid()}-${file.name}`, file, {
       access: 'public',
     });
 
