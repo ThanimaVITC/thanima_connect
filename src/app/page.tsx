@@ -27,7 +27,7 @@ export default function Home() {
       <ScrollAnimation />
       <section className="flex flex-col items-center justify-center text-center py-12 sm:py-16 md:py-20 lg:py-24">
       <div className="mx-auto mb-8 flex h-48 w-48 md:h-56 md:w-56 lg:h-64 lg:w-64 items-center justify-center logo-container">
-         <img src="/thanima logo.png" alt="Thanima Logo"  className="h-full w-full object-contain" />
+         <img src="/thanima_logo_11zon.webp" alt="Thanima Logo"  className="h-full w-full object-contain" />
       </div>
 
       <div className="content-backdrop">
