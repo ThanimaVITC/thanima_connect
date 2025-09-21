@@ -32,20 +32,12 @@ export default function Home() {
 
       <div className="content-backdrop">
         <h1 className="font-headline text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-foreground text-overlay hero-title">
-          Thanima Recruitment Hub
+          Recruitment Has Ended
         </h1>
         <p className="mt-4 max-w-2xl text-base sm:text-lg md:text-xl lg:text-2xl text-muted-foreground text-overlay hero-subtitle">
-          Join the heart of our cultural and literary community. We are looking
-          for passionate and dedicated students to join our various departments
-          and make a difference.
+          Thank you for your interest in joining Thanima. The recruitment for this year has ended.
         </p>
         <div className="mt-8 flex flex-col items-center gap-4 hero-cta">
-          <Button asChild size="lg" className="button-glow interactive-element pulse-animation glow-effect">
-            <Link href="/apply">
-              Get Started
-              <ArrowRight className="ml-2" />
-            </Link>
-          </Button>
           <div className="flex items-center gap-4 pt-4">
             <Button asChild variant="ghost" size="icon" className="social-icon interactive-element glow-effect">
               <Link
