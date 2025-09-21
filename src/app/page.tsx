@@ -32,7 +32,7 @@ export default function Home() {
 
       <div className="content-backdrop">
         <h1 className="font-headline text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-foreground text-overlay hero-title">
-          Recruitment Has Ended
+          Form is closed
         </h1>
         <p className="mt-4 max-w-2xl text-base sm:text-lg md:text-xl lg:text-2xl text-muted-foreground text-overlay hero-subtitle">
           Thank you for your interest in joining Thanima. The recruitment for this year has ended.
